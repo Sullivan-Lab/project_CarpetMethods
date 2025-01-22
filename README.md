@@ -1,6 +1,5 @@
-# Template repository for Sullivan Lab Work
+# Seed Rain Methods Comparison Between Astroturf and Sticky-traps
 
-[*Created by Kelly Kapsar, modified by Lauren Sullivan. For more information on how to use this repository, see: [AboutThisTemplate.md](https://github.com/NEON-biodiversity/template_repository/blob/main/AboutThisTemplate.md)*]
 
 ## Table of Contents
 - [Introduction](#Introduction)
