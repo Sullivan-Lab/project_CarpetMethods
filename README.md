@@ -53,7 +53,7 @@
 - **Inputs**: [*Raw data files in the `/data`> `/L0` folder (`MO_seedrain_raw.csv`, `CO_seedrain_raw.csv`).*]
 - **Outputs**: [*Processed data files in a new folder (`/processed_data`).*]
 
-### [*`data_analysis_.R`*]
+### [*`data_analysis.R`*]
 
 - **Purpose**: [*Merges multiple preprocessed datasets and analyzes data for xxx manuscript.*]
 - **Inputs**: [*Processed data files in the `/processed_data` folder.*]
