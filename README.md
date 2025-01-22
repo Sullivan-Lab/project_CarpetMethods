@@ -64,12 +64,12 @@
 [*Startup to LLS and LGS provided by the University of Missouri and University of Wyoming.*]
 
 ## Acknowledgements
-[*Kate Wynne and Maya Parker-Smith helped with MO data collection*]
+[*Kate Wynne and Maya Parker-Smith helped with MO data collection <LGS: add more!>*]
 
 ## Contributors
 
-[*Lauren Sullivan and Lauren Shoemaker collected data <LGS: add more!>*]
+[*Lauren Sullivan and Lauren Shoemaker collected data, analyzed data, developed manuscript, Larissa Kahan and Melissa DeSiervo contributed to idea generation and manuscript writing. <LGS: add more!>*]
 
 ## Contact Information
 
-[*Please contact Lauren Shoemaker () and Lauren Sullivan (llsull@msu.edu) re: questions about the scripts and data*]
+[*Please contact Lauren Shoemaker (lshoema1@uwyo.edu) and Lauren Sullivan (llsull@msu.edu) re: questions about the scripts and data*]
