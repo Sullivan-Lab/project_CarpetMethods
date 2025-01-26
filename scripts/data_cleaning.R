@@ -33,14 +33,13 @@ mo <- read_csv("../data/L0/MO_seedrain_raw.csv")
 co <- read_csv("../data/L0/CO_seedrain_raw.csv")
 
 
-## clean data to just be the species we selected
+## clean data to just be the species we selected, not the extra 
+##      seeds we caught throughout the experiment
 
 mo_slim <- mo %>%
             filter(species == c("LESCAP", "DESCAN", "TRIPER", 
                                 "SCHSCO", "ECHANG", "SPOHET",
                                 "RUDHIR", "CORTIN"))
 
-testing
+list(unique(mo_slim$species))
 
-
-head(mo_slim)
