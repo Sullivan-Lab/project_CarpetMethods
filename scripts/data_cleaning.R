@@ -40,5 +40,7 @@ mo_slim <- mo %>%
                                 "SCHSCO", "ECHANG", "SPOHET",
                                 "RUDHIR", "CORTIN"))
 
+testing
+
 
 head(mo_slim)
