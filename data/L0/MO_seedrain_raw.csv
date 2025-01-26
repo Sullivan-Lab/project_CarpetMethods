@@ -1,4 +1,4 @@
-site,block,plot,time_month,trt,species,number_recovered,number_original,number_herbivorized,notes
+site,block,plot,time_month,treatment,species,number_recovered,number_original,number_herbivorized,notes
 mo,4,20,1 month,sticky,LESCAP,15,20,,
 mo,4,20,1 month,sticky,DESCAN,18,20,2,
 mo,4,20,1 month,sticky,SCHSCO,18,20,,
