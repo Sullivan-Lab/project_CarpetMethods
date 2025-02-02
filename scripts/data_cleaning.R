@@ -168,4 +168,5 @@ dev.off()
 
 
 
-
+### what to do next:  make a model
+#.   removal ~ seed size + treatment + time + (1|site/block)
