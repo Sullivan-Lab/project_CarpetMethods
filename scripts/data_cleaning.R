@@ -107,3 +107,6 @@ dat_all %>%
   facet_grid(cols = vars(species))
 
 
+
+###nexct to dos - make a relativized figure so it shows increase or decrease from sticky traps for carpets.
+
