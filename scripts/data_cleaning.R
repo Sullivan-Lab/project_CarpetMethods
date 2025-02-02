@@ -5,7 +5,7 @@
 #
 # AUTHORS: Lauren Sullivan (llsull@msu.edu) & Lauren Shoemaker (lshoema1@uwyo.edu)
 # COLLAB:  Melissa DeSiervo, Larissa Kahan
-# EDITED:  22 January 2025
+# EDITED:  1 February 2025
 #
 # FILES:   1) data/L0/MO_seedrain_raw.csv
 #          2) data/L0/CO_seedrain_raw.xlsx
@@ -21,11 +21,13 @@
 ## clear workspace
 rm(list=ls())
 
+## working directory
 #set working directory to "source file location"
 
 ## libraries
 library(tidyverse)
-
+library(RColorBrewer)
+library(cowplot)
 
 ## data
 mo <- read_csv("../data/L0/MO_seedrain_raw.csv")
@@ -92,21 +94,32 @@ dat_all$time_month <- as.factor(dat_all$time_month)
 
 #### FIGURES
 
+
+
 ## some exploratory data analysis
-dat_all %>%
+##MO
+
+
+mo_raw <- dat_all %>%
   filter(site == "mo" & treatment != "post-sticky") %>%
 ggplot( aes(x = time_month, y = pct_recovered, color = treatment))+
   geom_boxplot()+
-  facet_grid(cols = vars(species))
+  facet_grid(cols = vars(species))+
+  scale_color_brewer(palette = "Set1")
 
-
-dat_all %>%
+co_raw <- dat_all %>%
   filter(site == "co") %>%
   ggplot(aes(x = time_month, y = pct_recovered, color = treatment))+
   geom_boxplot()+
-  facet_grid(cols = vars(species))
+  facet_grid(cols = vars(species))+
+  scale_color_brewer(palette = "Set1")
 
 
+#note: will clean this up as we go forward but not important for now.
+pdf("../figures/all_raw_data.pdf", width = 10, height = 8)
 
-###nexct to dos - make a relativized figure so it shows increase or decrease from sticky traps for carpets.
+plot_grid(mo_raw, co_raw, cols = 1, labels = c("A)", "B)"))
 
+dev.off()
+
+head(dat_all)
