@@ -8,7 +8,9 @@
 # EDITED:  1 February 2025
 #
 # FILES:   1) data/L0/MO_seedrain_raw.csv
-#          2) data/L0/CO_seedrain_raw.xlsx
+#          2) data/LO/MO_seedweight_raw.csv
+#          3) data/L0/CO_seedrain_raw.csv
+#          4) data/L0/CO_seedweight_raw.csv
 #
 
 # NOTES:   creates "strict" datasets where we just focus on the species of interest 
@@ -31,9 +33,10 @@ library(cowplot)
 
 ## data
 mo <- read_csv("../data/L0/MO_seedrain_raw.csv")
+mo_mass <- read_csv("../data/L0/MO_seedweight_raw.csv")
 
 co <- read_csv("../data/L0/CO_seedrain_raw.csv")
-
+co_mass <- read_csv("../data/L0/CO_seedweight_raw.csv")
 
 #### MISSORI DATA CLEANING
 ## clean up treatment names and times
@@ -138,10 +141,10 @@ dat_wide <- dat_small %>%
   )
 head(dat_wide)
 
-dat_wide$rel_removed <- log(dat_wide$sticky / dat_wide$carpet)
+dat_wide$LRR_removed <- log(dat_wide$sticky / dat_wide$carpet)
 
 
-mo_rel <- ggplot(subset(dat_wide, site == "mo"), aes(x = time_month, y = rel_removed))+
+mo_rel <- ggplot(subset(dat_wide, site == "mo"), aes(x = time_month, y = LRR_removed))+
   geom_boxplot()+
   #geom_point(position = position_jitter(width = 0.2))+
   geom_hline(yintercept = 0, linetype = "dashed", color = "red")+
@@ -149,7 +152,7 @@ mo_rel <- ggplot(subset(dat_wide, site == "mo"), aes(x = time_month, y = rel_rem
   scale_color_brewer(palette = "Set1")+
   theme_bw()
 
-co_rel <- ggplot(subset(dat_wide, site == "co"), aes(x = time_month, y = rel_removed))+
+co_rel <- ggplot(subset(dat_wide, site == "co"), aes(x = time_month, y = LRR_removed))+
   #geom_point(position = position_jitter(width = 0.2))+
   geom_boxplot()+
   geom_hline(yintercept = 0, linetype = "dashed", color = "red")+
@@ -164,6 +167,43 @@ plot_grid(mo_rel, co_rel, ncol = 1, labels = c("A)", "B)"))
 
 dev.off()
 
+
+
+### Clean seed mass data
+
+head(mo_mass)
+mo_mass_small <- mo_mass %>% 
+  group_by(species) %>%
+  dplyr::summarize(mean_1seed = mean(lot_mass_g)/25)
+
+
+head(co_mass)
+co_mass_small <- co_mass %>%
+  pivot_longer(
+    cols = afrut:yglau,
+    names_to = "species",
+    values_to = "mass"
+    ) %>%
+  group_by(species) %>%
+  dplyr::summarize(mean_1seed = mean(mass)/25)
+
+co_mass_small
+
+#rename species
+co_mass_small$species[co_mass_small$species == 'afrut'] <- "a.fruticosa"
+co_mass_small$species[co_mass_small$species == 'bdact'] <- "b.dactyloides"
+co_mass_small$species[co_mass_small$species == 'bgrac'] <- "b.gracilis"
+co_mass_small$species[co_mass_small$species == 'dpurp'] <- "d.purpurea"
+co_mass_small$species[co_mass_small$species == 'hannu'] <- "h.annuus"
+co_mass_small$species[co_mass_small$species == 'origi'] <- "s.rigida"
+co_mass_small$species[co_mass_small$species == 'sangu'] <- "s.angustifolium"
+co_mass_small$species[co_mass_small$species == 'yglau'] <- "y.glauca"
+
+head(mo_mass_small)
+
+mass_all <- rbind(mo_mass_small, co_mass_small)
+
+dat_wide <- left_join(dat_wide, mass_all)
 
 
 
