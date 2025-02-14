@@ -30,6 +30,8 @@ rm(list=ls())
 library(tidyverse)
 library(RColorBrewer)
 library(cowplot)
+library(glmmTMB)
+
 
 ## data
 mo <- read_csv("../data/L0/MO_seedrain_raw.csv")
@@ -50,13 +52,26 @@ mo$time_month <- as.numeric(mo$time_month)
 #list(unique(mo$time_month))
 
 
-## clean data to just be the species we selected, not the extra 
+## clean recovery data to just be the species we selected, not the extra 
 ##      seeds we caught throughout the experiment
 
 mo_slim <- mo %>%
   filter(species == "LESCAP" | species == "DESCAN" | species == "TRIPER" |
          species == "SCHSCO" | species == "ECHANG" | species == "SPOHET" |
          species == "RUDHIR" | species == "CORTIN")
+
+
+## clean seed mass data
+
+head(mo_mass)
+mo_mass_small <- mo_mass %>% 
+  group_by(species) %>%
+  dplyr::summarize(mean_1seed = mean(lot_mass_g)/25)
+
+## rename species to match recovery data
+mo_mass_small$species[mo_mass_small$species == 'RATPIN'] <- "RUDHIR"
+
+
 
 
 #### COLORADO DATA CLEANING
@@ -68,13 +83,34 @@ co$treatment[co$treatment == 'c'] <- "carpet"
 #list(unique(co$treatment))
 #list(unique(mo$time_month))
 
-## clean data to just be the species we selected, not the extra 
+## clean recovery data to just be the species we selected, not the extra 
 ##      seeds we caught throughout the experiment
 
 list(unique(co$species))
 
 co_slim <- co %>%
   filter(species != ("various"))
+
+head(co_mass)
+co_mass_small <- co_mass %>%
+  pivot_longer(
+    cols = afrut:yglau,
+    names_to = "species",
+    values_to = "mass"
+  ) %>%
+  group_by(species) %>%
+  dplyr::summarize(mean_1seed = mean(mass)/25)
+
+
+#rename species to match recovery data
+co_mass_small$species[co_mass_small$species == 'afrut'] <- "a.fruticosa"
+co_mass_small$species[co_mass_small$species == 'bdact'] <- "b.dactyloides"
+co_mass_small$species[co_mass_small$species == 'bgrac'] <- "b.gracilis"
+co_mass_small$species[co_mass_small$species == 'dpurp'] <- "d.purpurea"
+co_mass_small$species[co_mass_small$species == 'hannu'] <- "h.annuus"
+co_mass_small$species[co_mass_small$species == 'origi'] <- "s.rigida"
+co_mass_small$species[co_mass_small$species == 'sangu'] <- "s.angustifolium"
+co_mass_small$species[co_mass_small$species == 'yglau'] <- "y.glauca"
 
 
 ## Create full dataset with both sites
@@ -168,39 +204,7 @@ plot_grid(mo_rel, co_rel, ncol = 1, labels = c("A)", "B)"))
 dev.off()
 
 
-
-### Clean seed mass data
-
-head(mo_mass)
-mo_mass_small <- mo_mass %>% 
-  group_by(species) %>%
-  dplyr::summarize(mean_1seed = mean(lot_mass_g)/25)
-
-
-head(co_mass)
-co_mass_small <- co_mass %>%
-  pivot_longer(
-    cols = afrut:yglau,
-    names_to = "species",
-    values_to = "mass"
-    ) %>%
-  group_by(species) %>%
-  dplyr::summarize(mean_1seed = mean(mass)/25)
-
-co_mass_small
-
-#rename species
-co_mass_small$species[co_mass_small$species == 'afrut'] <- "a.fruticosa"
-co_mass_small$species[co_mass_small$species == 'bdact'] <- "b.dactyloides"
-co_mass_small$species[co_mass_small$species == 'bgrac'] <- "b.gracilis"
-co_mass_small$species[co_mass_small$species == 'dpurp'] <- "d.purpurea"
-co_mass_small$species[co_mass_small$species == 'hannu'] <- "h.annuus"
-co_mass_small$species[co_mass_small$species == 'origi'] <- "s.rigida"
-co_mass_small$species[co_mass_small$species == 'sangu'] <- "s.angustifolium"
-co_mass_small$species[co_mass_small$species == 'yglau'] <- "y.glauca"
-
-head(mo_mass_small)
-
+##. add seed mass data into big dataset.
 mass_all <- rbind(mo_mass_small, co_mass_small)
 
 dat_wide <- left_join(dat_wide, mass_all)
