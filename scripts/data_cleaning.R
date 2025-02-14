@@ -138,7 +138,7 @@ dat_wide <- dat_small %>%
   )
 head(dat_wide)
 
-dat_wide$rel_removed <- dat_wide$sticky - dat_wide$carpet
+dat_wide$rel_removed <- log(dat_wide$sticky / dat_wide$carpet)
 
 
 mo_rel <- ggplot(subset(dat_wide, site == "mo"), aes(x = time_month, y = rel_removed))+
