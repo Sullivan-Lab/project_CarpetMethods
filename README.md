@@ -41,7 +41,7 @@
 ### File Naming Conventions
 
 - **Data Files**: [*`state_datatype_raw.csv`.*]
-- **Scripts**: [*To be run in order: `1_cleaning_script.R`, `\2_analysis_script.R`*]
+- **Scripts**: [*Carpet Methods Code.Rmd*]
 
 ## Scripts
 
