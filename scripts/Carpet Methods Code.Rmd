@@ -39,7 +39,9 @@ subtitle:
 # NOTES:   creates "strict" datasets where we just focus on the species of interest 
 #             not herbivory or other species that were collected in the traps
 #
-# NEXT STEPS: 
+# NEXT STEPS: 1) Figure out which model makes the most sense (which interactions)
+#   2) decide if there are other models to run.
+#   3) decide if time is ok as it is as data > factor > numeric (now 1,2,3)
 
 
 # PROLOG   ##############################################################################
