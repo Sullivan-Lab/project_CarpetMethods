@@ -17,10 +17,7 @@ subtitle:
 
 # {.tabset .tabset-pills .tabset-fade}
   
-## Data Cleaning
-  
-  
-Clean and combine all data from CO and MO sites - both the recovery and the seed mass data.
+## Prolog
 
 
 ```{r, eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
@@ -39,15 +36,14 @@ Clean and combine all data from CO and MO sites - both the recovery and the seed
 #          3) data/L0/CO_seedrain_raw.csv
 #          4) data/L0/CO_seedweight_raw.csv
 #
-
 # NOTES:   creates "strict" datasets where we just focus on the species of interest 
 #             not herbivory or other species that were collected in the traps
+#
+# NEXT STEPS: 
+
 
 # PROLOG   ##############################################################################
 ```
-
-
-
 ```{r, eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # clear workspace
 rm(list=ls())
@@ -70,6 +66,9 @@ co <- read_csv("../data/L0/CO_seedrain_raw.csv")
 co_mass <- read_csv("../data/L0/CO_seedweight_raw.csv")
 
 ```
+## Data Cleaning
+
+Clean and combine all data from CO and MO sites - both the recovery and the seed mass data.
 
 Missouri data cleaning
 
@@ -156,7 +155,6 @@ dat_all <- full_join(mo_slim, co_slim)
 dat_all$pct_recovered <- dat_all$number_recovered/dat_all$number_original
 dat_all$time_month <- as.factor(dat_all$time_month)
 
-### MAKE SURE THIS ISN"T A FACTOR IN THE ANALYSIS>
 
 ```
 
@@ -251,13 +249,25 @@ invisible(dev.off())
 
 ## Analysis
 
+Explore how seed removal is a function of seed size, trap method and time with a random effect for block nested within site.
 
-what to do next:  make a model
- >>  removal ~ seed size + treatment + time + (1|site/block)
+
+NOTE: as we go forward for now time is 1,2,3 because I turned the factor back into a number.  So they're ordered but the time is different between them.  Will need to think if this is a problem or not.
 
 ```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
-##. add seed mass data into big dataset.
+
+# add seed mass data into big dataset.
 mass_all <- rbind(mo_mass_small, co_mass_small)
 
-dat_wide <- left_join(dat_wide, mass_all)
+dat_full <- left_join(dat_wide, mass_all)
+
+dat_full$time_month <- as.numeric(dat_full$time_month)
+
+str(dat_full)
+list(unique(dat_full$time_month))
+
+
+
+mod1 <- glmmTMB()
+
 ```
