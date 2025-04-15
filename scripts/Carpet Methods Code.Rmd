@@ -294,11 +294,6 @@ summary(mod1)
 
 
 #recover params after backtransforming
-coef.out <- coef(mod1)
-plogis(coef.out$site[2])
-
-plogis(102.5)
-
 #mean capture with a carpet
 plogis(0.58)
 
@@ -312,6 +307,55 @@ plogis(102.5)
 plogis(102.5 - 115.2)
 
 
+#PREDICT the data from the statistical model
+out.pred <- predict(mod1, type = 'response')
+
+head(out.pred)
+head(dat_full)
+
+predicted <- data.frame(pred = out.pred,
+                        mass = dat_full$mean_1seed,
+                        time = dat_full$time_month,
+                        treatment = dat_full$treatment,
+                        num_rec = dat_full$number_recovered,
+                        num_lost = dat_full$number_lost)
+head(predicted)
+
+# graph with predicted data
+palatte <- c("#CC79A7","#E69F00" )
+
+
+#the data looks good, but i can't get the lines to be right.
+ggplot(predicted, aes(x = mass, y = pred, 
+                     color = treatment))+
+  geom_point(position = position_jitter(width = 0.0002), alpha = 0.5)+
+  theme_bw()+
+  scale_colour_manual(values = palatte)+
+  labs(y= "Proportion Seeds Recovered", x = "Seed mass")+
+## oof the lines feel off!
+    geom_abline(intercept = plogis(.58882), slope = plogis(102.51826), 
+              color = "#CC79A7", size = 1, linetype = 2)+
+   geom_abline(intercept = plogis(.58882 + 1.5577), slope = plogis(102.51826-115.2), 
+              color = "#E69F00", size = 1, linetype = 2)
+
+summary(mod1)
+
+
+### i don't think these lines are right either because the nubmer recovered and lost are from the data (not predicted), but I don't know how to use the geom_smooth(method=glm)
+ggplot(predicted, aes(x = mass, y = pred, 
+                     color = treatment, success=num_rec, fail=num_lost))+
+  geom_point(position = position_jitter(width = 0.0002), alpha = 0.5)+
+  theme_bw()+
+  scale_colour_manual(values = palatte)+
+  labs(y= "Proportion Seeds Recovered", x = "Seed mass")+
+  geom_smooth(method="glm",
+              method.args=list(family="binomial"),
+              formula = cbind(success, fail) ~ x)
+
+
+
+
+####EDA
 #percent recovered vs seed mass across sites
 #getting weird warning message.
 ggplot(dat_full, aes(x = mean_1seed, y = number_recovered/(number_recovered+number_lost), 
