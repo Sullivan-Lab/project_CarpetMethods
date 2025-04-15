@@ -275,6 +275,10 @@ dat_full$time_month[dat_full$time_month == 3] <- 2
 # remove the post-sticky treatment from MO
 dat_full <- subset(dat_full, treatment != "post-sticky")
 
+# calculate the number not recovered
+dat_full$number_lost <- dat_full$number_original - dat_full$number_recovered
+
+
 ## summary stats
 dat_full %>%
   group_by(treatment) %>%
@@ -288,7 +292,7 @@ mod1 <- glmmTMB(pct_recovered ~ treatment * mean_1seed + time_month + (1|site/bl
                 family = binomial)
 summary(mod1)
 
-dat_full$number_lost <- dat_full$number_original - dat_full$number_recovered
+
 
 #percent recovered vs seed mass across sites
 #getting weird warning message.
@@ -312,7 +316,15 @@ ggplot(dat_full, aes(x = mean_1seed, y = number_recovered/(number_recovered+numb
    facet_wrap(~site, scale = "free_x")
 
 
-
+# Recovery through time.
+ggplot(dat_full, aes(x = mean_1seed, y = number_recovered/(number_recovered+number_lost), 
+                     color = treatment, success=number_recovered, fail=number_lost))+
+  geom_point()+
+  theme_bw()+
+  geom_smooth(method="glm",
+              method.args=list(family="binomial"),
+              formula = cbind(success, fail) ~ x)+
+   facet_wrap(~time_month, scale = "free_x")
 
 
 
