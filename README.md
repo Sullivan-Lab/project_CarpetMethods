@@ -20,7 +20,7 @@
 
 ## Workflow
 
-[*Download raw data, clean data with this code, then use this code to run analyses and create figures for the manuscript xxx*] 
+[*Download raw data, clean data with this code, then use this code to run analyses and create figures for the manuscript*] 
 
 ## Location of data 
 
@@ -36,16 +36,16 @@
 
 ## Usage
 
-[*R version 4.3.3, Rstudio version XXX*]
+[*R version 4.3.3, Rstudio version 2024.12.0+467*]
 
 ### File Naming Conventions
 
-- **Data Files**: [*`state_datatype_raw.csv`.*]
+- **Data Files**: [*`state_datatype_raw.csv`*]
 - **Scripts**: [*Carpet Methods Code.Rmd*]
 
 ## Scripts
 
-[*scripts are found in the main "Analysis" folder, and it accesses raw data from L0, cleaned data from L1, figures in "Figures".  First the data should be cleaned, and then the data can be analyzed.*] 
+[*scripts are found in the main "Analysis" folder, and it accesses raw data from L0, save figures in "Figures".  First the data should be cleaned, and then the data can be analyzed.*] 
 
 ### [*`data_cleaning.R`*]
 
@@ -55,12 +55,12 @@
 
 ### [*`data_analysis.R`*]
 
-- **Purpose**: [*Merges multiple preprocessed datasets and analyzes data for xxx manuscript.*]
-- **Inputs**: [*Processed data files in the `/processed_data` folder.*]
-- **Outputs**: [*Merged dataset saved as `merged_data.csv` in the `/output` folder, and figures for the manuscript are saved in the `/figures` folder.*]
+- **Purpose**: [*Merges multiple preprocessed datasets and analyzes data for manuscript.*]
+- **Inputs**: [*Raw data files in the `/L0` folder.*]
+- **Outputs**: [*Merged dataset saved as `final_data.csv` in the `/output` folder, and figures for the manuscript are saved in the `/figures` folder.*]
 
 ## Funding Sources
-[*Startup to LLS and LGS provided by the University of Missouri and University of Wyoming.*]
+[*Startup to LLS and LGS provided by the University of Missouri, Michigan State University and University of Wyoming, LGS was supported by the James S. McDonnell Foundation grant #20020513.*]
 
 ## Acknowledgements
 [*Kate Wynne and Maya Parker-Smith helped with MO data collection <LGS: add more!>*]
