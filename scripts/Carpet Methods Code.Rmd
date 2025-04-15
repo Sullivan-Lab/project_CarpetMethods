@@ -293,6 +293,24 @@ mod1 <- glmmTMB(pct_recovered ~ treatment * mean_1seed + time_month + (1|site/bl
 summary(mod1)
 
 
+#recover params after backtransforming
+coef.out <- coef(mod1)
+plogis(coef.out$site[2])
+
+plogis(102.5)
+
+#mean capture with a carpet
+plogis(0.58)
+
+#mean capture with a sticky trap
+plogis(0.58+1.6)
+
+#slope of carpet recovery with seed mass
+plogis(102.5)
+
+#slope of sticky trap recovery with seed mass
+plogis(102.5 - 115.2)
+
 
 #percent recovered vs seed mass across sites
 #getting weird warning message.
