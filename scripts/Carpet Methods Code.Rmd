@@ -306,6 +306,7 @@ plogis(102.5)
 #slope of sticky trap recovery with seed mass
 plogis(102.5 - 115.2)
 
+#####ATTEMPT 1
 
 #PREDICT the data from the statistical model
 out.pred <- predict(mod1, type = 'response')
@@ -351,6 +352,78 @@ ggplot(predicted, aes(x = mass, y = pred,
   geom_smooth(method="glm",
               method.args=list(family="binomial"),
               formula = cbind(success, fail) ~ x)
+install.packages("jtools")
+library(jtools)
+
+
+#####ATTEMPT 2
+####This is close, with base R but I can't quite get the lines to print, but if i can this will be what I want.
+
+## example from Venables and Ripley (2002, pp. 190-2.)
+library(stats)
+ldose <-statsldose <- rep(0:5, 2)
+numdead <- c(1, 4, 9, 13, 18, 20, 0, 2, 6, 10, 12, 16)
+sex <- factor(rep(c("M", "F"), c(6, 6)))
+SF <- cbind(numdead, numalive = 20-numdead)
+budworm.lg <- glm(SF ~ sex*ldose, family = binomial)
+summary(budworm.lg)
+
+plot(c(1,32), c(0,1), type = "n", xlab = "dose",
+     ylab = "prob", log = "x")
+text(2^ldose, numdead/20, as.character(sex))
+ld <- seq(0, 5, 0.1)
+lines(2^ld, predict(budworm.lg, 
+                    data.frame(ldose = ld,
+                               sex = factor(rep("M", length(ld)))),
+   type = "response"))
+lines(2^ld, predict(budworm.lg, data.frame(ldose = ld,
+   sex = factor(rep("F", length(ld)))),
+   type = "response"))
+
+cbind(numdead, numalive = 20-numdead)
+mod1 <- glmmTMB(cbind(number_lost, number_recovered) ~ treatment * mean_1seed + time_month + (1|site/block), 
+                data = dat_full, 
+                weights = number_original, 
+                family = binomial)
+summary(mod1)
+
+
+plot(c(0,0.02), c(0,1), type = "n", xlab = "mass", ylab = "prob")
+ld <- seq.int(from = 0, to = 0.02, length.out = nrow(dat_full))
+lines(2^ld, predict(mod1,data.frame(mean_1seed = ld, 
+                               treatment = factor(rep("carpet", length(ld)), levels = c("carpet", "sticky")),
+                               time_month = dat_full$time_month,
+                               site = dat_full$site,
+                               block = dat_full$block,
+                               number_original = dat_full$number_original),
+                    type = "response"))
+
+
+#####ATTEMPT 3
+########GGPredict - 0k this works but the model is really simple and not correct (e.g. no mixed effects, no month.)
+
+require(ggiraph)
+require(ggiraphExtra)
+require(plyr)
+
+
+mod2 <- glm(pct_recovered ~ treatment * mean_1seed, 
+                data = dat_full, 
+                family = binomial)
+summary(mod2)
+
+ggPredict(mod2, se=TRUE)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
