@@ -336,8 +336,13 @@ summary(mod1)
 
 ```
 
+remake figure with model predicted data!
+```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 
-## testing out figures with model data.
+```
+
+
+testing out figures with model data.
 ```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 
 
