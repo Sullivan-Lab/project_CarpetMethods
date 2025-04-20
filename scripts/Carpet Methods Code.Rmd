@@ -224,8 +224,12 @@ dat_wide <- dat_small %>%
 dat_wide$LRR_removed <- log(dat_wide$sticky / dat_wide$carpet)
 
 mo_wide <- subset(dat_wide, site == "mo")
-
+head(mo_wide)
 ##update figure based on seed size order!!
+
+mo_wide$species <- factor(mo_wide$species, levels = c("TRIPER", "CORTIN", "RUDHIR", "SCHSCO", "SPOHET", "LESCAP", "DESCAN", "ECHPAL"))
+
+str(mo_wide)
 
 mo_rel <- ggplot(mo_wide, aes(x = time_month, y = LRR_removed))+
   geom_boxplot()+
