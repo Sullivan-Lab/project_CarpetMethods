@@ -223,8 +223,11 @@ dat_wide <- dat_small %>%
 
 dat_wide$LRR_removed <- log(dat_wide$sticky / dat_wide$carpet)
 
+mo_wide <- subset(dat_wide, site == "mo")
 
-mo_rel <- ggplot(subset(dat_wide, site == "mo"), aes(x = time_month, y = LRR_removed))+
+##update figure based on seed size order!!
+
+mo_rel <- ggplot(mo_wide, aes(x = time_month, y = LRR_removed))+
   geom_boxplot()+
   #geom_point(position = position_jitter(width = 0.2))+
   geom_hline(yintercept = 0, linetype = "dashed", color = "red")+
