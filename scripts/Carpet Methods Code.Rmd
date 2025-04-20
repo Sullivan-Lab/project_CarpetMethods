@@ -94,6 +94,9 @@ mo_slim <- mo %>%
          species == "RUDHIR" | species == "CORTIN")
 
 
+#we used ECHPAL, not ECHANG - so update data
+mo_slim$species[mo_slim$species == 'ECHANG'] <- "ECHPAL"
+
 # clean seed mass data
 
 mo_mass_small <- mo_mass %>% 
@@ -102,6 +105,7 @@ mo_mass_small <- mo_mass %>%
 
 # rename species to match recovery data
 mo_mass_small$species[mo_mass_small$species == 'RATPIN'] <- "RUDHIR"
+mo_mass_small$species[mo_mass_small$species == 'ECHANG'] <- "ECHPAL"
 
 ```
 
@@ -151,6 +155,7 @@ Join data together
 
 dat_all <- full_join(mo_slim, co_slim)
 
+list(unique(dat_all$species))
 
 # create a %consumed column
 
@@ -271,7 +276,6 @@ dat_full$time_month[dat_full$time_month == 2] <- 1
 dat_full$time_month[dat_full$time_month == 3] <- 2
 
 
-
 # remove the post-sticky treatment from MO
 dat_full <- subset(dat_full, treatment != "post-sticky")
 
@@ -291,6 +295,14 @@ mod1 <- glmmTMB(pct_recovered ~ treatment * mean_1seed + time_month + (1|site/bl
                 weights = number_original, 
                 family = binomial)
 summary(mod1)
+
+
+
+```
+
+
+## testing out figures with model data.
+```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 
 
 #recover params after backtransforming
