@@ -29,7 +29,7 @@ subtitle:
 #
 # AUTHORS: Lauren Sullivan (llsull@msu.edu) & Lauren Shoemaker (lshoema1@uwyo.edu)
 # COLLAB:  Melissa DeSiervo, Larissa Kahan
-# EDITED:  1 February 2025
+# EDITED:  20 April 2025
 #
 # FILES:   1) data/L0/MO_seedrain_raw.csv
 #          2) data/LO/MO_seedweight_raw.csv
