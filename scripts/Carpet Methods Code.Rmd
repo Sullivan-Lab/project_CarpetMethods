@@ -1,6 +1,6 @@
 ---
 title: "Carpet Methods Code"
-author: Lauren Sullivan and Lauren Shoemaker
+author: 
 output: 
   html_document:
   smart: no
@@ -40,7 +40,7 @@ subtitle:
 #             not herbivory or other species that were collected in the traps,
 #             runs statistical analysis, plots exploratory figures and model-based figures
 #
-# NEXT STEPS: estimate slope from mass by recovery fig (Fig 3), clean up .html
+# NEXT STEPS: estimate slopes from mass by recovery fig (Fig 3)
 
 
 # PROLOG   ##############################################################################
@@ -292,14 +292,10 @@ invisible(dev.off())
 
 ## Analysis
 
-Explore how seed removal is a function of seed size, trap method and time with a random effect for block nested within site.
-
-
-NOTE: as we go forward for now time is 1,2,3 because I turned the factor back into a number.  So they're ordered but the time is different between them.  Will need to think if this is a problem or not.
-
-NOTE2: Still working through which are the best models because there is a lot of interesting stuff here....
+Explore how proportion seed removal is a function of seed size, trap method and time with a random effect for block nested within site.
 
 ```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+## data cleanup
 
 # add seed mass data into big dataset.
 mass_all <- rbind(mo_mass_small, co_mass_small)
@@ -320,8 +316,10 @@ dat_full$number_lost <- dat_full$number_original - dat_full$number_recovered
 
 # treatment as factor
 dat_full$treatment <- as.factor(dat_full$treatment)
+```
 
-# Mod1
+```{r, eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+# Statistical Model
 mod1 <- glmmTMB(pct_recovered ~ treatment * mean_1seed + time_month + (1|site/block), 
                 data = dat_full, 
                 weights = number_original, 
@@ -332,7 +330,8 @@ summary(mod1)
 
 
 
-testing out figures with model data.
+Summary stats and main text figure to represent the significant trap type * seed mass interaction using model predicted values.
+
 ```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 
 #Predict the data from the statistical model
@@ -374,9 +373,7 @@ mass <- ggplot(predicted, aes(x = mass, y = pred,
                 axis.text.x = element_text(size = 11)
       )
 
-
-
-
+mass
 
 ## save figure
 pdf("../figures/recovery_by_mass2.pdf", width = 6, height = 5)
@@ -385,13 +382,16 @@ mass
 
 invisible(dev.off())
 
+```
 
+Supplemental figure to look at the predicted outcome for all factors (trap type, mass, time and site)
 
-
-
-# Predicted figure for all factors - for supplement.
+```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+# Predicted figure for all factors
 pred <- ggpredict(mod1, terms=c("mean_1seed", "treatment", "site", "time_month"), type="random")
 pred_all <- plot(pred)
+pred_all
+
 
 ## save figure
 pdf("../figures/all_predicted.pdf", width = 6, height = 5)
@@ -399,46 +399,5 @@ pdf("../figures/all_predicted.pdf", width = 6, height = 5)
 pred_all
 
 invisible(dev.off())
-
-
-
-
-
-
-
-####EDA
-#percent recovered vs seed mass across sites
-#getting weird warning message.
-ggplot(dat_full, aes(x = mean_1seed, y = number_recovered/(number_recovered+number_lost), 
-                     color = treatment, success=number_recovered, fail=number_lost))+
-  geom_point()+
-  theme_bw()+
-  geom_smooth(method="glm",
-              method.args=list(family="binomial"),
-              formula = cbind(success, fail) ~ x)
-
-#percent recovered vs seed mass with sites as panels
-#getting weird warning message.
-ggplot(dat_full, aes(x = mean_1seed, y = number_recovered/(number_recovered+number_lost), 
-                     color = treatment, success=number_recovered, fail=number_lost))+
-  geom_point()+
-  theme_bw()+
-  geom_smooth(method="glm",
-              method.args=list(family="binomial"),
-              formula = cbind(success, fail) ~ x)+
-   facet_wrap(~site, scale = "free_x")
-
-
-# Recovery through time.
-ggplot(dat_full, aes(x = mean_1seed, y = number_recovered/(number_recovered+number_lost), 
-                     color = treatment, success=number_recovered, fail=number_lost))+
-  geom_point()+
-  theme_bw()+
-  geom_smooth(method="glm",
-              method.args=list(family="binomial"),
-              formula = cbind(success, fail) ~ x)+
-   facet_wrap(~time_month, scale = "free_x")
-
-
 
 ```
