@@ -40,7 +40,7 @@ subtitle:
 #             not herbivory or other species that were collected in the traps,
 #             runs statistical analysis, plots exploratory figures and model-based figures
 #
-# NEXT STEPS: estimate slopes from mass by recovery fig (Fig 3)
+# NEXT STEPS: estimate slopes from mass by recovery fig (Fig 3), decide on MO post-sticky
 
 
 # PROLOG   ##############################################################################
@@ -57,7 +57,8 @@ library(tidyverse)
 library(RColorBrewer)
 library(cowplot)
 library(glmmTMB)
-library(ggeffects)
+library(ggeffects) #for ggpredict()
+library(emmeans) # for post-sticky comparison
 
 # data
 mo <- read_csv("../data/L0/MO_seedrain_raw.csv")
@@ -401,3 +402,26 @@ pred_all
 invisible(dev.off())
 
 ```
+
+
+## 1 month vs 1 month post sticky
+
+```{r, eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+dat_test <- dat_all[,1:8]
+dat_test <- subset(dat_test, site == "mo" & time_month == 1)
+
+dat_test$pct_recovered <- dat_test$number_recovered/dat_test$number_original
+
+ggplot(dat_test, aes(x = treatment, y = pct_recovered))+
+  geom_boxplot()+
+  theme_bw()
+
+
+mod2 <- glmmTMB(pct_recovered ~ treatment + (1|block), 
+                data = dat_test, 
+                family = binomial)
+summary(mod2) 
+emmeans(mod2, pairwise~treatment)
+
+```
+
