@@ -317,6 +317,10 @@ dat_full$number_lost <- dat_full$number_original - dat_full$number_recovered
 
 # treatment as factor
 dat_full$treatment <- as.factor(dat_full$treatment)
+
+# site and block as factors
+dat_full$site <- as.factor(dat_full$site)
+dat_full$block <- as.factor(dat_full$block)
 ```
 
 ```{r, eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
@@ -385,17 +389,51 @@ invisible(dev.off())
 
 ```
 
+
+Examining model output and different comparisons we want to report and visualize. In particular, use emmeans to examine comparisons among trap types at different seed masses.
+
+```{r}
+
+# Contrasts for different seed masses
+EM <- emmeans::emmeans(mod1, ~treatment |mean_1seed, at = list(mean_1seed = c(0)))
+pairs(EM) ### average results over random effects ##
+
+EM2 <- emmeans::emmeans(mod1, ~treatment |mean_1seed, at = list(mean_1seed = c(0.02)))
+pairs(EM2) ### average results over random effects ##
+
+```
+
 Supplemental figure to look at the predicted outcome for all factors (trap type, mass, time and site)
 
 ```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+
+dat_full_renamed <- dat_full %>%
+  mutate(Month = time_month) %>%
+  select(-time_month)
+mod2 <- glmmTMB(pct_recovered ~ treatment * mean_1seed + Month + (1|site/block), 
+                data = dat_full_renamed, 
+                weights = number_original, 
+                family = binomial)
+summary(mod2) 
 # Predicted figure for all factors
-pred <- ggpredict(mod1, terms=c("mean_1seed", "treatment", "site", "time_month"), type="random")
-pred_all <- plot(pred)
+pred <- ggpredict(mod2, terms=c("mean_1seed", "treatment", "site", "Month"), type="random")
+
+pred$facet <- ifelse(pred$facet == "mo", "Missouri", "Colorado")
+pred_all <- plot(pred) +
+  labs(x="Seed mass (g)", y="Percent Recovered", color = "Trap Type") +
+  ggtitle("") +
+  scale_color_manual(values = c("#CC79A7","#E69F00" ), labels = c("astroturf", "sticky")) +
+  scale_fill_manual(values = c("#CC79A7","#E69F00" )) +  
+          theme(axis.title.y = element_text(size = 14, vjust = +1.5),
+                axis.title.x = element_text(size = 11, vjust = -0.75),
+                axis.text.y = element_text(size = 11),
+                axis.text.x = element_text(size = 11, angle=45, vjust=.7))
+      
 pred_all
 
 
 ## save figure
-pdf("../figures/all_predicted.pdf", width = 6, height = 5)
+pdf("../figures/all_predicted.pdf", width = 5, height = 6)
 
 pred_all
 
