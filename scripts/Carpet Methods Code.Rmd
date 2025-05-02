@@ -252,7 +252,7 @@ mo_rel <- ggplot(mo_wide, aes(x = time_month, y = LRR_removed))+
   scale_color_brewer(palette = "Set1")+
   theme_bw()+
   ylab("Recovery Log Response Ratio")+
-  theme(strip.text.x = element_text(size = 10),
+  theme(strip.text.x = element_text(size = 10, face = "italic"),
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 14, vjust = +1.5),
         axis.text.y = element_text(size = 11),
