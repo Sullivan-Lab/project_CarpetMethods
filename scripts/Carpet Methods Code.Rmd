@@ -259,7 +259,6 @@ mo_rel <- ggplot(mo_wide, aes(x = time_month, y = LRR_removed))+
         axis.text.x = element_text(size = 11)
       )
 
-
 #size order
 co_wide <- subset(dat_wide, site == "co")
 co_wide$species <- factor(co_wide$species, levels = c("b.gracilis", "s.rigida", "s.angustifolium", "d.purpurea", "h.annuus", "a.fruticosa", "b.dactyloides", "y.glauca"), labels = c("B. gracilis", "S. rigida", "S. angustifolium", "D. purpurea", "H. annuus", "A. fruticosa", "B. dactyloides", "Y. glauca"))
@@ -359,7 +358,7 @@ predicted %>%
 
 palatte <- c("#CC79A7","#E69F00" )
 
-predicted$treatment <- factor(predicted$treatment, levels = c("carpet", "sticky"), labels = c("astroturf", "sticky"))
+predicted$treatment <- factor(predicted$treatment, levels = c("carpet", "sticky"), labels = c("artificial grass", "sticky"))
 
 
 
@@ -370,7 +369,7 @@ mass <- ggplot(predicted, aes(x = mass, y = pred,
           theme_bw()+
           scale_colour_manual(values = palatte)+
           labs(y= "Proportion of Seeds Recovered", x = "Seed mass", color = "Trap Type")+ 
-          stat_smooth(method = "glm", 
+          stat_smooth(method = "glm",
                       method.args = list(family = "binomial"))+  
           theme(axis.title.y = element_text(size = 14, vjust = +1.5),
                 axis.title.x = element_text(size = 14, vjust = -0.75),
@@ -381,7 +380,7 @@ mass <- ggplot(predicted, aes(x = mass, y = pred,
 mass
 
 ## save figure
-pdf("../figures/recovery_by_mass2.pdf", width = 6, height = 5)
+pdf("../figures/recovery_by_mass.pdf", width = 6, height = 5)
 
 mass
 
@@ -403,7 +402,7 @@ pairs(EM2) ### average results over random effects ##
 
 ```
 
-Supplemental figure to look at the predicted outcome for all factors (trap type, mass, time and site)
+Supplemental figure to explore the predicted outcome for all factors (trap type, mass, time and site)
 
 ```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -422,7 +421,7 @@ pred$facet <- ifelse(pred$facet == "mo", "Missouri", "Colorado")
 pred_all <- plot(pred) +
   labs(x="Seed mass (g)", y="Percent Recovered", color = "Trap Type") +
   ggtitle("") +
-  scale_color_manual(values = c("#CC79A7","#E69F00" ), labels = c("astroturf", "sticky")) +
+  scale_color_manual(values = c("#CC79A7","#E69F00" ), labels = c("artificial grass", "sticky")) +
   scale_fill_manual(values = c("#CC79A7","#E69F00" )) +  
           theme(axis.title.y = element_text(size = 14, vjust = +1.5),
                 axis.title.x = element_text(size = 11, vjust = -0.75),
@@ -442,25 +441,57 @@ invisible(dev.off())
 ```
 
 
-## 1 month vs 1 month post sticky
+Post-sticky analysis from MO
 
 ```{r, eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
-dat_test <- dat_all[,1:8]
-dat_test <- subset(dat_test, site == "mo" & time_month == 1)
+dat_ps <- dat_all[,1:8]
+dat_ps <- subset(dat_ps, site == "mo" & time_month == 1)
 
-dat_test$pct_recovered <- dat_test$number_recovered/dat_test$number_original
+dat_ps$pct_recovered <- dat_ps$number_recovered/dat_ps$number_original
 
-ggplot(dat_test, aes(x = treatment, y = pct_recovered))+
-  geom_boxplot()+
-  theme_bw()
 
+
+dat_ps$treatment <- factor(dat_ps$treatment, levels = c("post-sticky", "carpet", "sticky"), labels = c("post-sticky", "artificial grass", "sticky"))
 
 mod2 <- glmmTMB(pct_recovered ~ treatment + (1|block) + (1|species), 
-                data = dat_test, 
+                data = dat_ps, 
                 family = binomial)
 summary(mod2) 
 emmeans(mod2, pairwise~treatment)
 
+#Predict the data from the statistical model
+out.pred2 <- predict(mod2, type = 'response')
+
+
+predicted2 <- data.frame(pred2 = out.pred2,
+                        treatment = dat_ps$treatment)
+
+
+stats2 <- predicted2 %>%
+            group_by(treatment) %>%
+            dplyr::summarize(mean_pct = mean(pred2),
+                             sd_pct = sd(pred2))
+
+post_sticky <- ggplot(stats2, aes(x=treatment, y = mean_pct))+
+          geom_point(size=4)+
+          geom_errorbar(aes(ymin = mean_pct - sd_pct, ymax = mean_pct + sd_pct), width = 0.4, linewidth = 1)+
+          theme_bw()+
+          labs(y= "Proportion of Seeds Recovered", x = "Trap Type")+ 
+          theme(axis.title.y = element_text(size = 14, vjust = +1.5),
+                axis.title.x = element_text(size = 14, vjust = -0.75),
+                axis.text.y = element_text(size = 11),
+                axis.text.x = element_text(size = 11)
+      )
+
+post_sticky
+
+
+## save figure
+pdf("../figures/post_sticky.pdf", width = 5, height = 5)
+
+post_sticky
+
+invisible(dev.off())
 
 
 
