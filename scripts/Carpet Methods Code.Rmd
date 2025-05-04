@@ -455,11 +455,18 @@ ggplot(dat_test, aes(x = treatment, y = pct_recovered))+
   theme_bw()
 
 
-mod2 <- glmmTMB(pct_recovered ~ treatment + (1|block), 
+mod2 <- glmmTMB(pct_recovered ~ treatment + (1|block) + (1|species), 
                 data = dat_test, 
                 family = binomial)
 summary(mod2) 
 emmeans(mod2, pairwise~treatment)
+
+
+
+
+
+
+
 
 ```
 
