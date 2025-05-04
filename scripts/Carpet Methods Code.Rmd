@@ -402,7 +402,70 @@ pairs(EM2) ### average results over random effects ##
 
 ```
 
-Supplemental figure to explore the predicted outcome for all factors (trap type, mass, time and site)
+
+Post-sticky analysis from MO.  How seed recovery varies across trap type when traps are out for one month (stick, artificial grass and post-sticky)
+
+```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+dat_ps <- dat_all[,1:8]
+dat_ps <- subset(dat_ps, site == "mo" & time_month == 1)
+
+dat_ps$pct_recovered <- dat_ps$number_recovered/dat_ps$number_original
+
+
+
+dat_ps$treatment <- factor(dat_ps$treatment, levels = c("post-sticky", "carpet", "sticky"), labels = c("post-sticky", "artificial grass", "sticky"))
+```
+
+```{r, eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+mod2 <- glmmTMB(pct_recovered ~ treatment + (1|block) + (1|species), 
+                data = dat_ps, 
+                family = binomial)
+summary(mod2) 
+```
+
+Figure with predicted data
+
+```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+#Predict the data from the statistical model
+out.pred2 <- predict(mod2, type = 'response')
+
+
+predicted2 <- data.frame(pred2 = out.pred2,
+                        treatment = dat_ps$treatment)
+
+
+stats2 <- predicted2 %>%
+            group_by(treatment) %>%
+            dplyr::summarize(mean_pct = mean(pred2),
+                             sd_pct = sd(pred2))
+
+post_sticky <- ggplot(stats2, aes(x=treatment, y = mean_pct))+
+          geom_point(size=4)+
+          geom_errorbar(aes(ymin = mean_pct - sd_pct, ymax = mean_pct + sd_pct), width = 0.4, linewidth = 1)+
+          theme_bw()+
+          labs(y= "Proportion of Seeds Recovered", x = "Trap Type")+ 
+          theme(axis.title.y = element_text(size = 14, vjust = +1.5),
+                axis.title.x = element_text(size = 14, vjust = -0.75),
+                axis.text.y = element_text(size = 11),
+                axis.text.x = element_text(size = 11)
+      )
+
+post_sticky
+
+
+## save figure
+pdf("../figures/post_sticky.pdf", width = 5, height = 5)
+
+post_sticky
+
+invisible(dev.off())
+
+```
+
+
+## Supplemental figure 
+
+Explore the predicted outcome for all factors (trap type, mass, time and site)
 
 ```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -439,65 +502,3 @@ pred_all
 invisible(dev.off())
 
 ```
-
-
-Post-sticky analysis from MO
-
-```{r, eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
-dat_ps <- dat_all[,1:8]
-dat_ps <- subset(dat_ps, site == "mo" & time_month == 1)
-
-dat_ps$pct_recovered <- dat_ps$number_recovered/dat_ps$number_original
-
-
-
-dat_ps$treatment <- factor(dat_ps$treatment, levels = c("post-sticky", "carpet", "sticky"), labels = c("post-sticky", "artificial grass", "sticky"))
-
-mod2 <- glmmTMB(pct_recovered ~ treatment + (1|block) + (1|species), 
-                data = dat_ps, 
-                family = binomial)
-summary(mod2) 
-emmeans(mod2, pairwise~treatment)
-
-#Predict the data from the statistical model
-out.pred2 <- predict(mod2, type = 'response')
-
-
-predicted2 <- data.frame(pred2 = out.pred2,
-                        treatment = dat_ps$treatment)
-
-
-stats2 <- predicted2 %>%
-            group_by(treatment) %>%
-            dplyr::summarize(mean_pct = mean(pred2),
-                             sd_pct = sd(pred2))
-
-post_sticky <- ggplot(stats2, aes(x=treatment, y = mean_pct))+
-          geom_point(size=4)+
-          geom_errorbar(aes(ymin = mean_pct - sd_pct, ymax = mean_pct + sd_pct), width = 0.4, linewidth = 1)+
-          theme_bw()+
-          labs(y= "Proportion of Seeds Recovered", x = "Trap Type")+ 
-          theme(axis.title.y = element_text(size = 14, vjust = +1.5),
-                axis.title.x = element_text(size = 14, vjust = -0.75),
-                axis.text.y = element_text(size = 11),
-                axis.text.x = element_text(size = 11)
-      )
-
-post_sticky
-
-
-## save figure
-pdf("../figures/post_sticky.pdf", width = 5, height = 5)
-
-post_sticky
-
-invisible(dev.off())
-
-
-
-
-
-
-
-```
-
