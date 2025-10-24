@@ -367,6 +367,7 @@ mass <- ggplot(predicted, aes(x = mass, y = pred,
                      color = treatment))+
           geom_point(position = position_jitter(width = 0.0002), alpha = 0.5)+
           theme_bw()+
+          ylim(0,1)+
           scale_colour_manual(values = palatte)+
           labs(y= "Proportion of Seeds Recovered", x = "Seed mass", color = "Trap Type")+ 
           stat_smooth(method = "glm",
@@ -443,6 +444,7 @@ post_sticky <- ggplot(stats2, aes(x=treatment, y = mean_pct))+
           geom_point(size=4)+
           geom_errorbar(aes(ymin = mean_pct - sd_pct, ymax = mean_pct + sd_pct), width = 0.4, linewidth = 1)+
           theme_bw()+
+          ylim(0,1)+
           labs(y= "Proportion of Seeds Recovered", x = "Trap Type")+ 
           theme(axis.title.y = element_text(size = 14, vjust = +1.5),
                 axis.title.x = element_text(size = 14, vjust = -0.75),
