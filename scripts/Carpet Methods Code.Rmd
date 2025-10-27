@@ -55,6 +55,7 @@ rm(list=ls())
 # libraries
 library(tidyverse)
 library(RColorBrewer)
+library(viridis)
 library(cowplot)
 library(glmmTMB)
 library(ggeffects) #for ggpredict()
@@ -176,15 +177,15 @@ First lets look at the percent recovered.
 #size order
 mo_raw <- subset(dat_all,site == "mo" & treatment != "post-sticky")
 mo_raw$species <- factor(mo_raw$species, levels = c("TRIPER", "CORTIN", "RUDHIR", "SCHSCO", "SPOHET", "LESCAP", "DESCAN", "ECHPAL"), labels = c("T. perfoliata", "C. tinctoria", "R. hirta", "S. scoparium", "S. heterolepis", "L. capitata", "D. canadense", "E. pallida"))
+mo_raw$treatment <- factor(mo_raw$treatment, levels = c("carpet", "sticky"), labels = c("artificial\ngrass", "sticky"))
 
-
-mo_raw <- ggplot(mo_raw, aes(x = time_month, y = pct_recovered, color = treatment))+
-  geom_boxplot()+
+mo_raw <- ggplot(mo_raw, aes(x = time_month, y = pct_recovered, fill = treatment))+
+  geom_boxplot(alpha = 0.5)+
   facet_grid(cols = vars(species))+
-  scale_color_brewer(palette = "Set1")+
+  scale_fill_viridis_d(option = "rocket", name = "Trap Type")+
   theme_bw()+
-  ylab("Percent Seeds Recovered")+
-  theme(strip.text.x = element_text(size = 10),
+  labs(y = "Percent Seeds Recovered")+
+  theme(strip.text.x = element_text(size = 10, face = "italic"),
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 14, vjust = +1.5),
         axis.text.y = element_text(size = 11),
@@ -195,14 +196,14 @@ mo_raw <- ggplot(mo_raw, aes(x = time_month, y = pct_recovered, color = treatmen
 #size order
 co_raw <- subset(dat_all, site == "co")
 co_raw$species <- factor(co_raw$species, levels = c("b.gracilis", "s.rigida", "s.angustifolium", "d.purpurea", "h.annuus", "a.fruticosa", "b.dactyloides", "y.glauca"), labels = c("B. gracilis", "S. rigida", "S. angustifolium", "D. purpurea", "H. annuus", "A. fruticosa", "B. dactyloides", "Y. glauca"))
+co_raw$treatment <- factor(co_raw$treatment, levels = c("carpet", "sticky"), labels = c("artificial\ngrass", "sticky"))
 
-co_raw <- ggplot(co_raw, aes(x = time_month, y = pct_recovered, color = treatment))+
-  geom_boxplot()+
+co_raw <- ggplot(co_raw, aes(x = time_month, y = pct_recovered, fill = treatment))+
+  geom_boxplot(alpha = 0.5)+
   facet_grid(cols = vars(species))+
-  scale_color_brewer(palette = "Set1")+
+  scale_fill_viridis_d(option = "rocket", name = "Trap Type")+
   theme_bw()+
-  ylab("Percent Seeds Recovered")+
-  xlab("Time (month)")+
+  labs(y = "Percent Seeds Recovered",x = "Time (month)")+
   theme(strip.text.x = element_text(size = 10, face = "italic"),
         axis.title.y = element_text(size = 14, vjust = +1.5),
         axis.title.x = element_text(size = 14, vjust = -0.75),
@@ -213,7 +214,7 @@ co_raw <- ggplot(co_raw, aes(x = time_month, y = pct_recovered, color = treatmen
 plot_grid(mo_raw, co_raw, ncol = 1, labels = c("A)", "B)"))
 
 ## save figure
-pdf("../figures/all_raw_data.pdf", width = 10, height = 8)
+pdf("../figures/all_raw_data.pdf", width = 11, height = 8)
 
 plot_grid(mo_raw, co_raw, ncol = 1, labels = c("A)", "B)"), align = "h", axis = "l")
 
@@ -329,6 +330,7 @@ mod1 <- glmmTMB(pct_recovered ~ treatment * mean_1seed + time_month + (1|site/bl
                 weights = number_original, 
                 family = binomial)
 summary(mod1) 
+
 
 ```
 
