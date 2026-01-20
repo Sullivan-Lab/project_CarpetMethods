@@ -99,10 +99,12 @@ mo_slim <- mo %>%
 mo_slim$species[mo_slim$species == 'ECHANG'] <- "ECHPAL"
 
 # clean seed mass data
-
 mo_mass_small <- mo_mass %>% 
   group_by(species) %>%
-  dplyr::summarize(mean_1seed = mean(lot_mass_g)/25)
+  dplyr::summarize(mean_1seed = mean(lot_mass_g)/25,
+                   sd_1seed = sd(lot_mass_g)/25)
+
+mo_mass_small # missouri seed mass mean and sd
 
 # rename species to match recovery data
 mo_mass_small$species[mo_mass_small$species == 'RATPIN'] <- "RUDHIR"
@@ -133,8 +135,10 @@ co_mass_small <- co_mass %>%
     values_to = "mass"
   ) %>%
   group_by(species) %>%
-  dplyr::summarize(mean_1seed = mean(mass)/25)
+  dplyr::summarize(mean_1seed = mean(mass)/25,
+                   sd_1seed = sd(mass)/25)
 
+co_mass_small # colorado seed mass mean and sd
 
 #rename species to match recovery data
 co_mass_small$species[co_mass_small$species == 'afrut'] <- "a.fruticosa"
@@ -174,6 +178,9 @@ First lets look at the percent recovered.
 
 ```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 
+
+palatte <- c("#CC79A7","#E69F00")
+
 #size order
 mo_raw <- subset(dat_all,site == "mo" & treatment != "post-sticky")
 mo_raw$species <- factor(mo_raw$species, levels = c("TRIPER", "CORTIN", "RUDHIR", "SCHSCO", "SPOHET", "LESCAP", "DESCAN", "ECHPAL"), labels = c("T. perfoliata", "C. tinctoria", "R. hirta", "S. scoparium", "S. heterolepis", "L. capitata", "D. canadense", "E. pallida"))
@@ -182,7 +189,7 @@ mo_raw$treatment <- factor(mo_raw$treatment, levels = c("carpet", "sticky"), lab
 mo_raw <- ggplot(mo_raw, aes(x = time_month, y = pct_recovered, fill = treatment))+
   geom_boxplot(alpha = 0.5)+
   facet_grid(cols = vars(species))+
-  scale_fill_viridis_d(option = "rocket", name = "Trap Type")+
+  scale_fill_manual(values = palatte, name = "Trap Type")+
   theme_bw()+
   labs(y = "Percent Seeds Recovered")+
   theme(strip.text.x = element_text(size = 10, face = "italic"),
@@ -201,7 +208,7 @@ co_raw$treatment <- factor(co_raw$treatment, levels = c("carpet", "sticky"), lab
 co_raw <- ggplot(co_raw, aes(x = time_month, y = pct_recovered, fill = treatment))+
   geom_boxplot(alpha = 0.5)+
   facet_grid(cols = vars(species))+
-  scale_fill_viridis_d(option = "rocket", name = "Trap Type")+
+  scale_fill_manual(values = palatte, name = "Trap Type")+
   theme_bw()+
   labs(y = "Percent Seeds Recovered",x = "Time (month)")+
   theme(strip.text.x = element_text(size = 10, face = "italic"),
