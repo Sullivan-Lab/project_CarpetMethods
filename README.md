@@ -51,23 +51,23 @@
 
 - **Purpose**: [*Cleans and preprocesses raw Level 0 data.*]
 - **Inputs**: [*Raw data files in the `/data`> `/L0` folder (`MO_seedrain_raw.csv`, `CO_seedrain_raw.csv`).*]
-- **Outputs**: [*Processed data files in a new folder (`/processed_data`).*]
+- **Outputs**: [*Figures in a new folder (`/figures`).*]
 
 ### [*`data_analysis.R`*]
 
 - **Purpose**: [*Merges multiple preprocessed datasets and analyzes data for manuscript.*]
 - **Inputs**: [*Raw data files in the `/L0` folder.*]
-- **Outputs**: [*Merged dataset saved as `final_data.csv` in the `/output` folder, and figures for the manuscript are saved in the `/figures` folder.*]
+- **Outputs**: [*Figures for the manuscript are saved in the `/figures` folder.*]
 
 ## Funding Sources
-[*Startup to LLS and LGS provided by the University of Missouri, Michigan State University and University of Wyoming, LGS was supported by the James S. McDonnell Foundation grant #20020513.*]
+[*Startup to LLS and LGS provided by the University of Missouri, Michigan State University and University of Wyoming. Funding was received from the James S. McDonnell Foundation (grant #220020513 to L.G.S.), the U.S. National Science Foundation (NSF) (grant #2019528 to L.G.S. and M.H.D., and grant #2441141 to L.L.S. and L.M.K.).*]
 
 ## Acknowledgements
-[*Kate Wynne and Maya Parker-Smith helped with MO data collection <LGS: add more!>*]
+[*Kate Wynne and Maya Parker-Smith helped with MO data collection*]
 
 ## Contributors
 
-[*Lauren Sullivan and Lauren Shoemaker collected data, analyzed data, developed manuscript, Larissa Kahan and Melissa DeSiervo contributed to idea generation and manuscript writing. <LGS: add more!>*]
+[*Lauren Sullivan and Lauren Shoemaker collected data, analyzed data, developed manuscript, Larissa Kahan and Melissa DeSiervo contributed to idea generation and manuscript writing.*]
 
 ## Contact Information
 
