@@ -112,7 +112,7 @@ co_raw <- ggplot(co_raw, aes(x = as.factor(time_month), y = pct_recovered, fill 
 plot_grid(mo_raw, co_raw, ncol = 1, labels = c("A)", "B)"))
 
 ## save figure
-pdf("../figures/all_raw_data.pdf", width = 11, height = 8)
+png("../figures/all_raw_data.png", width = 11, height = 8, units = "in", res = 600)
 
 plot_grid(mo_raw, co_raw, ncol = 1, labels = c("A)", "B)"), align = "h", axis = "l")
 
@@ -181,7 +181,7 @@ plot_grid(mo_rel, co_rel, ncol = 1, labels = c("A)", "B)"))
 
 
 ## save figure
-pdf("../figures/all_relative_data.pdf", width = 10, height = 8)
+png("../figures/all_relative_data.png", width = 10, height = 8, units = "in", res = 600)
 
 plot_grid(mo_rel, co_rel, ncol = 1, labels = c("A)", "B)"), align = "h", axis = "l")
 
@@ -255,7 +255,7 @@ mass <- ggplot(predicted, aes(x = mass, y = pred,
 mass
 
 ## save figure
-pdf("../figures/recovery_by_mass.pdf", width = 6, height = 5)
+png("../figures/recovery_by_mass.png", width = 6, height = 5, units = "in", res = 600)
 
 mass
 
@@ -330,7 +330,7 @@ post_sticky
 
 
 ## save figure
-pdf("../figures/post_sticky.pdf", width = 5, height = 5)
+png("../figures/post_sticky.png", width = 5, height = 5, units = "in", res = 600)
 
 post_sticky
 
@@ -371,7 +371,7 @@ pred_all
 
 
 ## save figure
-pdf("../figures/all_predicted.pdf", width = 5, height = 6)
+png("../figures/all_predicted.png", width = 5, height = 6, units = "in", res = 600)
 
 pred_all
 
